@@ -5,6 +5,7 @@ library(tidyverse) # data cleaning. manipulation and visualization
 library(xml2)
 library(rvest)
 library(dplyr)
+library(party)
 
 library("httr")
 url <- "https://zillow-com1.p.rapidapi.com/propertyExtendedSearch"
@@ -42,4 +43,3 @@ zillow_info <- function(city, hometype) {
 }
 
 df_zillow <- zillow_info("new york city", "Houses")
-

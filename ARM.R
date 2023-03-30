@@ -113,7 +113,7 @@ for(i in 1:nrow(df_zillow)){
 }
 
 rule1 <- apriori(df_zillow_arm, parameter=list(support = 0.5, confidence = 0.5))
-inspect(head(sort(rule1, by = "lift"),15))
+inspect(head(sort(rule1, by = "confidence"),15))
 
 plot1 <- plot(rule1)
 plot1
