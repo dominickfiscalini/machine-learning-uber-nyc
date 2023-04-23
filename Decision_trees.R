@@ -23,8 +23,6 @@ df_uber_brooklyn <- pickup_city("Brooklyn")
 df_uber_combine <- rbind(df_uber_bronx, df_uber_brooklyn)
 df_uber_combine$PuFrom <- gsub(" ", "", df_uber_combine$PuFrom, fixed = TRUE)
 df_uber_combine <- df_uber_combine[!grepl('BRONXVILLE', df_uber_combine$PuFrom),]
-table(df_uber_combine$PuFrom)
-str(df_uber_combine)
 
 
 df_uber_combine <- select(df_uber_combine, -c("State", "Address", "Street"))
@@ -45,3 +43,38 @@ uber_tree1 <- ctree(formula, data = df_utrain,
                     controls = ctree_control(minsplit = 1))
 plot(uber_tree1)
 
+train_predict <- predict(uber_tree1,df_utrain,type="response")
+table(Predicted = train_predict, Actual = df_utrain$PuFrom)
+
+
+df_uber_bronx <- pickup_city("Bronx")
+df_uber_brooklyn <- pickup_city("Brooklyn")
+df_uber_queens <- pickup_city("Queens")
+df_uber_combine <- rbind(df_uber_bronx, df_uber_brooklyn, df_uber_queens)
+df_uber_combine$PuFrom <- gsub(" ", "", df_uber_combine$PuFrom, fixed = TRUE)
+df_uber_combine <- df_uber_combine[!grepl('BRONXVILLE', df_uber_combine$PuFrom),]
+table(df_uber_combine$PuFrom)
+str(df_uber_combine)
+
+
+df_uber_combine <- select(df_uber_combine, -c("State", "Address", "Street"))
+df_uber_combine$PuFrom <- as.factor(df_uber_combine$PuFrom)
+df_uber_combine$Date <- gsub(".", "", df_uber_combine$Date, fixed = TRUE)
+df_uber_combine$Date <- strtoi(df_uber_combine$Date)
+df_uber_combine$Time <- gsub(":", "", df_uber_combine$Time, fixed = TRUE)
+df_uber_combine$Time <- strtoi(df_uber_combine$Time)
+
+set.seed(14545)
+df_upartition <- sample(2, nrow(df_uber_combine), replace = TRUE, prob = c(0.8, 0.2))
+
+df_utrain <- df_uber_combine[df_upartition == 1, ]
+df_utest <- df_uber_combine[df_upartition == 2, ]
+formula = PuFrom ~ Date + Time
+
+uber_tree2 <- ctree(formula, data = df_utrain, 
+                    controls = ctree_control(minsplit = 1))
+plot(uber_tree2)
+formula = PuFrom ~ Date
+uber_tree3 <- ctree(formula, data = df_utrain, 
+                    controls = ctree_control(minsplit = 1))
+plot(uber_tree3)

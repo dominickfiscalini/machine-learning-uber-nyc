@@ -42,4 +42,12 @@ zillow_info <- function(city, hometype) {
   df_zillow = select(df_zillow, -c("daysOnZillow", "currency", "hasImage"))
 }
 
-df_zillow <- zillow_info("new york city", "Houses")
+df_zillow1 <- zillow_info("manhattan", "Houses")
+df_zillow2 <- zillow_info("bronx", "Houses")
+df_zillow3 <- zillow_info("queens", "Houses")
+colnames(df_zillow1)
+colnames(df_zillow2)
+colnames(df_zillow3)
+df_zillow_1 <- df_zillow1[,c("dateSold", "propertyType", "address", "priceChange",
+                             "zestimate", "price", "bedrooms", "longtiude", "latitude",
+                             "listingStatus", "zpid", "rentZestimate", "bathrooms", "country")]
